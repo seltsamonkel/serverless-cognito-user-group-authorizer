@@ -50,6 +50,17 @@ resources:
         UserPoolId:
           Ref: UserPool
 
+    UserIdentityPool:
+      Type: AWS::Cognito::IdentityPool
+      Properties:
+        IdentityPoolName: user_identity_pool
+        AllowUnauthenticatedIdentities: false
+        CognitoIdentityProviders:
+          - ClientId:
+              Ref: UserPoolClient
+            ProviderName:
+              Fn::GetAtt: [ "UserPool", "ProviderName" ]
+
     AdminRole:
       Type: "AWS::IAM::Role"
       Properties:
@@ -105,17 +116,6 @@ resources:
           Ref: UserPool
         RoleArn:
           Fn::GetAtt: [ UserRole, Arn ]
-
-    UserIdentityPool:
-      Type: AWS::Cognito::IdentityPool
-      Properties:
-        IdentityPoolName: user_identity_pool
-        AllowUnauthenticatedIdentities: false
-        CognitoIdentityProviders:
-          - ClientId:
-              Ref: UserPoolClient
-            ProviderName:
-              Fn::GetAtt: [ "UserPool", "ProviderName" ]
 
     # IAM roles
     UserIdentityPoolRoles:
